@@ -1,0 +1,16 @@
+{
+    "name": "noccylabs/acpi-thermal",
+    "description": "Read thermal temperature values from sysfs",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Christopher Vagnetoft",
+            "email": "cvagnetoft@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "NoccyLabs\\Thermal\\": "lib/"
+        }
+    }
+}

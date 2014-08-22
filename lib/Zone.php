@@ -26,12 +26,30 @@ namespace NoccyLabs\Thermal;
  */
 class Zone
 {
+    /** @var string The name/id of this zone */
     protected $zone_id;
 
+    /** @var string The path to this zone, including the sysfs root */
     protected $zone_path;
 
+    /** @var string The sysfs root to use */
     protected static $sysfs_root = "/sys/class/thermal";
 
+    /**
+     * Set the root of the SysFs to use. This is primarily intended for testing.
+     *
+     * @param string The root of the sysfs directory structure to use
+     */
+    public static function setSysfsRoot($sysfs_root)
+    {
+        self::$sysfs_root = $sysfs_root;
+    }
+
+    /**
+     * Get an array containing all the available zones on the system.
+     *
+     * @return array<NoccyLabs\Thermal\Zone> The available thermal zones
+     */
     public static function getAllZones()
     {
         $sysfs_root = self::$sysfs_root;
@@ -44,6 +62,12 @@ class Zone
         return $ret;
     }
     
+    /**
+     * Constructor, requires a zone id
+     *
+     * @param string The zone id (f.ex. thermal_zone0)
+     * @throws InvalidArgumentException
+     */
     public function __construct($zone_id)
     {
         $sysfs_root = self::$sysfs_root;
@@ -57,26 +81,51 @@ class Zone
         }
     }
     
+    /**
+     * Get the name of this thermal zone
+     *
+     * @return string The name (id) of this thermal zone
+     */
     public function getName()
     {
         return $this->zone_id;
     }
     
+    /**
+     * Get the temperature of this thermal zone in degrees celsius
+     *
+     * @return float The temperature of the zone
+     */
     public function getTemp()
     {
         return floatval(file_get_contents("{$this->zone_path}/temp")) / 1000;
     }
     
+    /**
+     * Get the type of the thermal zone
+     *
+     * @returns tring The zone type
+     */
     public function getType()
     {
         return trim(file_get_contents("{$this->zone_path}/type"));
     }
 
+    /**
+     * Get the mode of the zone (enabled or disabled)
+     *
+     * @return string The zone mode
+     */
     public function getMode()
     {
         return trim(file_get_contents("{$this->zone_path}/mode"));
     }
 
+    /**
+     * Get the policy of the zone
+     *
+     * @return string The policy of the zone
+     */
     public function getPolicy()
     {
         return trim(file_get_contents("{$this->zone_path}/policy"));
